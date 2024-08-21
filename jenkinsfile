@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    
+    environment {
+        WEB_DIR = '/var/www/html'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from GitHub
+                git 'https://github.com/ShankiDevadiga/local-repo.git'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    // Run shell commands to deploy
+                    sh """
+                        sudo rm -rf ${WEB_DIR}/*
+                        sudo cp -r * ${WEB_DIR}/
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment succeeded!'
+        }
+        failure {
+            echo 'Deployment failed!'
+        }
+    }
+}
